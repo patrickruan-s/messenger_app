@@ -1,0 +1,12 @@
+# Node
+my_messenger_ui/node_modules/
+
+# Rails
+my_messenger_backend/log/*
+my_messenger_backend/tmp/*
+my_messenger_backend/storage/*
+my_messenger_backend/db/*.sqlite3
+
+# Secrets
+my_messenger_backend/config/master.key
+.env
