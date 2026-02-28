@@ -5,6 +5,8 @@ class Message
   validates :from, :to, :direction, presence: true
   validate :number_must_be_valid
 
+  belongs_to :user
+
   field :from, type: String
   field :to, type: String
   field :body, type: String
@@ -12,6 +14,7 @@ class Message
 
   index({ from: 1 })
   index({ to: 1 })
+  index({ user_id: 1 })
 
   def number_must_be_valid
     Phonelib.valid?(to)

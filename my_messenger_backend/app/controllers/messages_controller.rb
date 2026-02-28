@@ -1,6 +1,8 @@
 class MessagesController < ApplicationController
+  before_action :authenticate_user!
+
   def index
-    render json: Message.order(created_at: :desc)
+    render json: current_user.messages.order(created_at: :desc)
   end
 
   def create
@@ -14,7 +16,7 @@ class MessagesController < ApplicationController
       to: params.require(:to),
       body: params.require(:body)
     )
-    message = Message.new(from: sms.from, to: sms.to, body: sms.body, direction: "outbound")
+    message = current_user.messages.new(from: sms.from, to: sms.to, body: sms.body, direction: "outbound")
 
     if message.save
       render json: { sid: sms.sid }, status: :created
