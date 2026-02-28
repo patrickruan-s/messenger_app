@@ -1,0 +1,47 @@
+<div class="container">
+  <div class="message-form">
+    <h2>Send a Message</h2>
+    <form [formGroup]="form" (ngSubmit)="send()">
+      <div class="field">
+        <label for="to">To</label>
+        <input
+          id="to"
+          type="tel"
+          formControlName="to"
+          placeholder="+1234567890"
+        />
+      </div>
+      <div class="field">
+        <label for="body">Message</label>
+        <textarea
+          id="body"
+          formControlName="body"
+          rows="2"
+          placeholder="Type your message..."
+        ></textarea>
+      </div>
+
+      <button type="submit" [disabled]="sending">
+        {{ sending ? 'Sending...' : 'Send' }}
+      </button>
+    </form>
+  </div>
+  <div class="messages">
+    @for (msg of messages; track msg._id['$oid']) {
+      <div class="message-bubble">
+        <span class="meta">{{msg.direction === 'outbound' ? 'To ' + msg.to : 'From: ' + msg.from }}</span>
+        <p>{{ msg.body }}</p>
+      </div>
+    }
+  </div>
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  @for (toast of toasts; track toast.message) {
+    <div class="toast show align-items-center text-bg-{{ toast.type }} border-0 mb-2">
+      <div class="d-flex">
+        <div class="toast-body">{{ toast.message }}</div>
+      </div>
+    </div>
+  }
+</div>
