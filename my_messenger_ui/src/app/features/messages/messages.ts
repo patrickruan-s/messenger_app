@@ -8,7 +8,7 @@ import { Message } from '../../core/services/message';
   templateUrl: './messages.html',
   styleUrl: './messages.css',
 })
-export class Messages {
+export class Messages implements OnInit, OnDestroy {
   form: FormGroup;
   sending = false;
   success = false;
@@ -16,6 +16,7 @@ export class Messages {
 
   toasts: { message: string; type: 'success' | 'danger' }[] = [];
   messages: any[] = [];
+  private pollInterval: any;
 
   loadAllMessages() {
     this.messageService.getAll().subscribe(msgs => this.messages = msgs);
@@ -23,6 +24,11 @@ export class Messages {
 
   ngOnInit() {
     this.loadAllMessages();
+    this.pollInterval = setInterval(() => this.loadAllMessages(), 5000);
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.pollInterval);
   }
 
   constructor(private fb: FormBuilder, private messageService: Message) {

@@ -46,7 +46,7 @@
 
 .message-bubble .meta {
   font-size: 0.7rem;
-  color: #888;
+  color: darkblue;
   margin-bottom: 2px;
 }
 
@@ -60,7 +60,7 @@
 }
 
 .message-bubble.outbound p {
-  background: #0b93f6;
+  background: lightblue;
   color: #fff;
   border-bottom-right-radius: 4px;
 }
