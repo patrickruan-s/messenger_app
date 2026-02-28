@@ -7,5 +7,5 @@ class JwtDenylist
   field :exp, type: Time
 
   index({ jti: 1 }, { unique: true })
-  index({ exp: 1 }, { expireAfterSeconds: 0 })
+  index({ exp: 1 }, { expire_after_seconds: 0 })
 end
