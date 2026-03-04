@@ -10,7 +10,7 @@ export class Message {
   constructor(private http: HttpClient) {}
 
   send(to: string, body: string) {
-    return this.http.post(`${this.apiUrl}/messages`, { to, body });
+    return this.http.post<any>(`${this.apiUrl}/messages`, { to, body });
   }
 
   getAll() {

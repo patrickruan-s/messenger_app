@@ -19,9 +19,12 @@ class MessagesController < ApplicationController
     message = current_user.messages.new(from: sms.from, to: sms.to, body: sms.body, direction: "outbound")
 
     if message.save
-      render json: { sid: sms.sid }, status: :created
+      render json: message, status: :created
     else
       render json: { errors: message.errors.full_messages }, status: :unprocessable_entity
     end
+  rescue => e
+    Rails.logger.error "Twilio error: #{e.message}"
+    render json: { errors: [e.message] }, status: :unprocessable_entity
   end
 end

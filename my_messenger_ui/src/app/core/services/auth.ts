@@ -9,28 +9,20 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   signIn(email: string, password: string) {
-    return this.http.post<unknown>(
+    return this.http.post<{ token: string }>(
       `${this.apiUrl}/users/sign_in`,
-      { user: { email, password } },
-      { observe: 'response' }
+      { user: { email, password } }
     ).pipe(
-      tap(response => {
-        const token = response.headers.get('Authorization')?.replace('Bearer ', '');
-        if (token) localStorage.setItem('jwt', token);
-      })
+      tap(res => localStorage.setItem('jwt', res.token))
     );
   }
 
   signUp(email: string, password: string, passwordConfirmation: string) {
-    return this.http.post<unknown>(
+    return this.http.post<{ token: string }>(
       `${this.apiUrl}/users`,
-      { user: { email, password, password_confirmation: passwordConfirmation } },
-      { observe: 'response' }
+      { user: { email, password, password_confirmation: passwordConfirmation } }
     ).pipe(
-      tap(response => {
-        const token = response.headers.get('Authorization')?.replace('Bearer ', '');
-        if (token) localStorage.setItem('jwt', token);
-      })
+      tap(res => localStorage.setItem('jwt', res.token))
     );
   }
 

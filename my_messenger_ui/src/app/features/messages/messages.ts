@@ -1,6 +1,9 @@
-import { Component, OnInit, OnDestroy} from '@angular/core';
+import { Component, OnDestroy, afterNextRender } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Message } from '../../core/services/message';
+import { AuthService } from '../../core/services/auth';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-messages',
@@ -8,7 +11,7 @@ import { Message } from '../../core/services/message';
   templateUrl: './messages.html',
   styleUrl: './messages.css',
 })
-export class Messages implements OnInit, OnDestroy {
+export class Messages implements OnDestroy {
   form: FormGroup;
   sending = false;
   success = false;
@@ -19,28 +22,43 @@ export class Messages implements OnInit, OnDestroy {
   private pollInterval: any;
 
   loadAllMessages() {
-    this.messageService.getAll().subscribe(msgs => this.messages = msgs);
-  }
-
-  ngOnInit() {
-    this.loadAllMessages();
-    this.pollInterval = setInterval(() => this.loadAllMessages(), 5000);
+    this.messageService.getAll().subscribe({
+      next: msgs => this.messages = msgs,
+      error: () => this.addToast('Failed to load messages.', 'danger'),
+    });
   }
 
   ngOnDestroy() {
     clearInterval(this.pollInterval);
   }
 
-  constructor(private fb: FormBuilder, private messageService: Message) {
+  constructor(
+    private fb: FormBuilder,
+    private messageService: Message,
+    private auth: AuthService,
+    private router: Router,
+  ) {
     this.form = this.fb.group({
       to: ['', Validators.required],
       body: ['', Validators.required],
+    });
+
+    afterNextRender(() => {
+      this.loadAllMessages();
+      this.pollInterval = setInterval(() => this.loadAllMessages(), 5000);
     });
   }
 
   addToast(message: string, type: 'success' | 'danger') {
     this.toasts.push({ message, type });
     setTimeout(() => this.toasts.shift(), 4000);
+  }
+
+  signOut() {
+    this.auth.signOut().subscribe({
+      next: () => this.router.navigate(['/']),
+      error: () => this.router.navigate(['/']),
+    });
   }
 
   send() {
@@ -51,11 +69,11 @@ export class Messages implements OnInit, OnDestroy {
     const { to, body } = this.form.value;
   
     this.messageService.send(to, body).subscribe({
-      next: () => {
+      next: (msg) => {
         this.sending = false;
         this.addToast('Message sent!', 'success');
         this.form.reset();
-        this.loadAllMessages();
+        this.messages = [msg, ...this.messages];
       },
       error: (err) => {
         this.sending = false;

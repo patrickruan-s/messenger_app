@@ -1,2 +1,13 @@
 class ApplicationController < ActionController::API
+  private
+
+  def authenticate_user!
+    token = request.headers['Authorization']&.split(' ')&.last
+    @current_user = User.where(token: token).first if token
+    render json: { error: 'Unauthorized' }, status: :unauthorized unless @current_user
+  end
+
+  def current_user
+    @current_user
+  end
 end

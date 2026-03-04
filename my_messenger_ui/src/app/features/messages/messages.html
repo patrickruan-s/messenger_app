@@ -1,3 +1,7 @@
+<div class="navbar">
+  <button class="sign-out btn btn-primary" (click)="signOut()">Sign Out</button>
+</div>
+
 <div class="container">
   <div class="message-form">
     <h2>Send a Message</h2>
@@ -27,7 +31,7 @@
     </form>
   </div>
   <div class="messages">
-    @for (msg of messages; track msg._id['$oid']) {
+    @for (msg of messages; track msg._id) {
       <div class="message-bubble" [class.outbound]="msg.direction === 'outbound'" [class.inbound]="msg.direction === 'inbound'">
         <span class="meta">{{msg.direction === 'outbound' ? 'To ' + msg.to : 'From: ' + msg.from }}</span>
         <p>{{ msg.body }}</p>

@@ -1,11 +1,1 @@
-class JwtDenylist
-  include Mongoid::Document
-  include Mongoid::Timestamps
-  include Devise::JWT::RevocationStrategies::Denylist
-
-  field :jti, type: String, default: ""
-  field :exp, type: Time
-
-  index({ jti: 1 }, { unique: true })
-  index({ exp: 1 }, { expire_after_seconds: 0 })
-end
+# No longer used — devise-jwt removed in favour of database token auth.

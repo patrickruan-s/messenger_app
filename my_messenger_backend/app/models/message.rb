@@ -3,7 +3,7 @@ class Message
   include Mongoid::Timestamps
 
   validates :from, :to, :direction, presence: true
-  validate :number_must_be_valid
+  validate :number_must_be_valid, if: -> { direction == 'outbound' }
 
   belongs_to :user
 
@@ -17,6 +17,6 @@ class Message
   index({ user_id: 1 })
 
   def number_must_be_valid
-    Phonelib.valid?(to)
+    errors.add(:to, 'is not a valid phone number') unless Phonelib.valid?(to)
   end
 end

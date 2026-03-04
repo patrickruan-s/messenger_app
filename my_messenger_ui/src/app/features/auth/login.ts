@@ -7,6 +7,7 @@ import { AuthService } from '../../core/services/auth';
   selector: 'app-login',
   imports: [ReactiveFormsModule],
   templateUrl: './login.html',
+  styleUrl: './login.css',
 })
 
 
@@ -46,9 +47,9 @@ export class Login {
         : this.auth.signUp(email, password, passwordConfirmation);
 
         request.subscribe({
-            next: () => this.router.navigate(['/']),
+            next: () => this.router.navigate(['/messages']),
             error: (err) => {
-                const errors: string[] = err.error?.errors ?? [err.error?.message ?? 'Failed to send message.'];
+                const errors: string[] = err.error?.errors ?? [err.error?.message ?? 'Something went wrong '];
                 errors.forEach(e => this.addToast(e, 'danger'));
             }
         });
