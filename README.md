@@ -7,6 +7,13 @@ Rails 8 + Angular messaging app using Twilio.
 - Frontend: Angular SPA
 
 ## Run locally
+
+Create a .env file in my_messenger_backend/:
+TWILIO_ACCOUNT_SID=your_account_sid
+TWILIO_AUTH_TOKEN=your_auth_token
+TWILIO_PHONE_NUMBER=your_twilio_number
+DEVISE_JWT_SECRET_KEY=any_long_random_string
+
 In Seperate Terminals:
 cd my_messenger_backend
 bundle install && rails s
@@ -14,9 +21,12 @@ bundle install && rails s
 cd my_messenger_ui
 npm install && npm start
 
-npx localtunnel --port 3000 --subdomain my-messenger-app
+ngrok http 3000
 
 Navigate to localhost:4200
+
+Set the ngrok URL + /webhooks/twilio/sms as your Twilio phone
+number's webhook in the Twilio console.
 
 ## Production
 Angular is built and served from Rails `/public`
@@ -24,51 +34,9 @@ Angular is built and served from Rails `/public`
 
 Dependencies:
 
-Backend:
-  │           Gem           │                 Purpose                 │  
-  ├─────────────────────────┼─────────────────────────────────────────┤  
-  │ rails ~> 8.1.2          │ Web framework                           │  
-  ├─────────────────────────┼─────────────────────────────────────────┤  
-  │ mongoid                 │ MongoDB ORM                             │
-  ├─────────────────────────┼─────────────────────────────────────────┤
-  │ devise                  │ Authentication (registration, sessions) │
-  ├─────────────────────────┼─────────────────────────────────────────┤
-  │ twilio-ruby             │ Twilio SMS API client                   │
-  ├─────────────────────────┼─────────────────────────────────────────┤
-  │ rack-cors               │ Cross-origin requests (Angular → Rails) │
-  ├─────────────────────────┼─────────────────────────────────────────┤
-  │ phonelib                │ Phone number validation                 │
-  ├─────────────────────────┼─────────────────────────────────────────┤
-  │ dotenv-rails            │ Load .env secrets in dev/test           │
-  ├─────────────────────────┼─────────────────────────────────────────┤
-  │ puma                    │ Web server                              │
-  ├─────────────────────────┼─────────────────────────────────────────┤
-  │ solid_cache/queue/cable │ DB-backed caching, jobs, WebSockets     │
-  │                         │ (Active Record)                         │
-  ├─────────────────────────┼─────────────────────────────────────────┤
-  │ pry                     │ Debugging REPL 
+Backend: Rails, Mongoid, Devise, Twilio Ruby, Rack CORS, Phonelib,     
+  Dotenv, Puma, Solid Cache, Solid Queue, Solid Cable, Pry.
 
-
+Frontend: Angular 21, Angular SSR, Angular Router, Angular Forms,      
+  Express, RxJS, Bootstrap 5, TypeScript, Vitest, Prettier.  
   Frontend:
-    ┌───────────────────────┬──────────────────────────┐
-  │        Package        │         Purpose          │
-  ├───────────────────────┼──────────────────────────┤
-  │ @angular/core + suite │ Angular 21 framework     │
-  ├───────────────────────┼──────────────────────────┤
-  │ @angular/ssr          │ Server-side rendering    │
-  ├───────────────────────┼──────────────────────────┤
-  │ @angular/router       │ Client-side routing      │
-  ├───────────────────────┼──────────────────────────┤
-  │ @angular/forms        │ Reactive forms           │
-  ├───────────────────────┼──────────────────────────┤
-  │ express               │ Node server for SSR      │
-  ├───────────────────────┼──────────────────────────┤
-  │ rxjs                  │ Observables / async HTTP │
-  ├───────────────────────┼──────────────────────────┤
-  │ bootstrap 5           │ UI styling               │
-  ├───────────────────────┼──────────────────────────┤
-  │ typescript ~5.9       │ Language                 │
-  ├───────────────────────┼──────────────────────────┤
-  │ vitest                │ Unit testing             │
-  ├───────────────────────┼──────────────────────────┤
-  │ prettier              │ Code formatting        
